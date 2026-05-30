@@ -3,6 +3,7 @@ from etl import run_etl
 import pandas as pd
 from sqlalchemy import create_engine
 from fastapi.responses import HTMLResponse
+import os
 
 app = FastAPI()
 
@@ -57,6 +58,12 @@ def execute_etl():
 
 @app.get("/universities")
 def get_universities():
+
+    db_path = "data/universities.db"
+
+    if not os.path.exists(db_path):
+        run_etl()
+        
     engine = create_engine(
         "sqlite:///data/universities.db"
     )
